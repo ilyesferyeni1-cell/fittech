@@ -75,14 +75,28 @@ export class TeamRankingComponent implements OnInit {
   constructor(private dataService: DataService) { }
 
   ngOnInit(): void {
-    this.dataService.getTeams().subscribe(teams => {
-      this.dataService.getStats().subscribe(stats => {
-        this.teamRankings = teams.map(team => {
-          const teamStats = stats.filter(s => s.team_name === team.team_name_std);
-          const totalGoals = teamStats.reduce((sum, stat) => sum + (parseInt(stat.attack_buts) || 0), 0);
-          return { ...team, totalGoals };
-        }).sort((a, b) => b.totalGoals - a.totalGoals);
-      });
+    this.dataService.getTeams().subscribe({
+      next: (teams) => {
+        this.dataService.getStats().subscribe({
+          next: (stats) => {
+            this.teamRankings = teams.map(team => {
+              const teamStats = stats.filter(s => s.team_name === team.team_name_std || s.team_name_std === team.team_name_std);
+              const totalGoals = teamStats.reduce((sum, stat) => {
+                const goals = parseInt(stat.attack_buts) || parseInt(stat.goals) || parseInt(stat.attack_goals) || 0;
+                return sum + goals;
+              }, 0);
+              return { ...team, totalGoals };
+            }).sort((a, b) => b.totalGoals - a.totalGoals);
+          },
+          error: (error) => {
+            console.error('Error fetching stats:', error);
+            this.teamRankings = teams.map(team => ({ ...team, totalGoals: 0 }));
+          }
+        });
+      },
+      error: (error) => {
+        console.error('Error fetching teams:', error);
+      }
     });
   }
 }

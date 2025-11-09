@@ -27,6 +27,14 @@ wyscout_players_outfield = pd.read_csv(data_dir / "wyscout_players_outfield.csv"
 for df in [matches_gps, training_gps, wyscout_matches, wyscout_players_goalkeeper, wyscout_players_outfield]:
     df.fillna(0, inplace=True)
 
+# Helper function to safely get column values
+def safe_get_column(df, col_name, default_value=0):
+    """Safely get column from DataFrame, return default if column doesn't exist"""
+    if col_name in df.columns:
+        return df[col_name]
+    else:
+        return pd.Series([default_value] * len(df), index=df.index)
+
 # ============================
 # 2) Dimension : dim_date
 # ============================
@@ -91,48 +99,48 @@ dim_player_wyscout["segment"] = "0"
 dim_player_wyscout["date_key"] = "0"
 
 # Infos de position / compétition
-dim_player_wyscout["position_type"] = dim_player_wyscout.get("position", "0")
+dim_player_wyscout["position_type"] = safe_get_column(dim_player_wyscout, "position", "0")
 dim_player_wyscout["competition"] = "0"
 
 # Métriques d'attaque
-dim_player_wyscout["attack_goals"] = dim_player_wyscout.get("goals", 0)
-dim_player_wyscout["attack_assists"] = dim_player_wyscout.get("assists", 0)
-dim_player_wyscout["attack_centres_precis"] = dim_player_wyscout.get("centres_precis", 0)
-dim_player_wyscout["attack_centres_total"] = dim_player_wyscout.get("centres_total", 0)
-dim_player_wyscout["attack_dribbles_reussis"] = dim_player_wyscout.get("dribbles_reussis", 0)
-dim_player_wyscout["attack_dribbles_total"] = dim_player_wyscout.get("dribbles_total", 0)
-dim_player_wyscout["attack_duels_offensifs_total"] = dim_player_wyscout.get("duels_offensifs_total", 0)
-dim_player_wyscout["attack_duels_perdus_total"] = dim_player_wyscout.get("duels_perdus_total", 0)
-dim_player_wyscout["attack_fautes_subies_total"] = dim_player_wyscout.get("fautes_subies_total", 0)
-dim_player_wyscout["attack_hors_jeu"] = dim_player_wyscout.get("hors_jeu", 0)
-dim_player_wyscout["attack_passes_decisives_tirs"] = dim_player_wyscout.get("passes_decisives_tirs", 0)
-dim_player_wyscout["attack_passes_total"] = dim_player_wyscout.get("passes_total", 0)
-dim_player_wyscout["attack_touches_surface_reparation"] = dim_player_wyscout.get("touches_surface_reparation", 0)
+dim_player_wyscout["attack_goals"] = safe_get_column(dim_player_wyscout, "goals", 0)
+dim_player_wyscout["attack_assists"] = safe_get_column(dim_player_wyscout, "assists", 0)
+dim_player_wyscout["attack_centres_precis"] = safe_get_column(dim_player_wyscout, "centres_precis", 0)
+dim_player_wyscout["attack_centres_total"] = safe_get_column(dim_player_wyscout, "centres_total", 0)
+dim_player_wyscout["attack_dribbles_reussis"] = safe_get_column(dim_player_wyscout, "dribbles_reussis", 0)
+dim_player_wyscout["attack_dribbles_total"] = safe_get_column(dim_player_wyscout, "dribbles_total", 0)
+dim_player_wyscout["attack_duels_offensifs_total"] = safe_get_column(dim_player_wyscout, "duels_offensifs_total", 0)
+dim_player_wyscout["attack_duels_perdus_total"] = safe_get_column(dim_player_wyscout, "duels_perdus_total", 0)
+dim_player_wyscout["attack_fautes_subies_total"] = safe_get_column(dim_player_wyscout, "fautes_subies_total", 0)
+dim_player_wyscout["attack_hors_jeu"] = safe_get_column(dim_player_wyscout, "hors_jeu", 0)
+dim_player_wyscout["attack_passes_decisives_tirs"] = safe_get_column(dim_player_wyscout, "passes_decisives_tirs", 0)
+dim_player_wyscout["attack_passes_total"] = safe_get_column(dim_player_wyscout, "passes_total", 0)
+dim_player_wyscout["attack_touches_surface_reparation"] = safe_get_column(dim_player_wyscout, "touches_surface_reparation", 0)
 
 # Métriques de défense
-dim_player_wyscout["defense_cartons_jaunes"] = dim_player_wyscout.get("cartons_jaunes", 0)
-dim_player_wyscout["defense_cartons_rouges"] = dim_player_wyscout.get("cartons_rouges", 0)
-dim_player_wyscout["defense_degagements_total"] = dim_player_wyscout.get("degagements_total", 0)
-dim_player_wyscout["defense_duels_defensifs_gagnes"] = dim_player_wyscout.get("duels_defensifs_gagnes", 0)
-dim_player_wyscout["defense_duels_defensifs_total"] = dim_player_wyscout.get("duels_defensifs_total", 0)
-dim_player_wyscout["defense_duels_perdus_total"] = dim_player_wyscout.get("duels_perdus_total", 0)
-dim_player_wyscout["defense_fautes_total"] = dim_player_wyscout.get("fautes_total", 0)
-dim_player_wyscout["defense_interceptions_total"] = dim_player_wyscout.get("interceptions_total", 0)
+dim_player_wyscout["defense_cartons_jaunes"] = safe_get_column(dim_player_wyscout, "cartons_jaunes", 0)
+dim_player_wyscout["defense_cartons_rouges"] = safe_get_column(dim_player_wyscout, "cartons_rouges", 0)
+dim_player_wyscout["defense_degagements_total"] = safe_get_column(dim_player_wyscout, "degagements_total", 0)
+dim_player_wyscout["defense_duels_defensifs_gagnes"] = safe_get_column(dim_player_wyscout, "duels_defensifs_gagnes", 0)
+dim_player_wyscout["defense_duels_defensifs_total"] = safe_get_column(dim_player_wyscout, "duels_defensifs_total", 0)
+dim_player_wyscout["defense_duels_perdus_total"] = safe_get_column(dim_player_wyscout, "duels_perdus_total", 0)
+dim_player_wyscout["defense_fautes_total"] = safe_get_column(dim_player_wyscout, "fautes_total", 0)
+dim_player_wyscout["defense_interceptions_total"] = safe_get_column(dim_player_wyscout, "interceptions_total", 0)
 
 # Métriques générales
-dim_player_wyscout["general_cartons_jaunes"] = dim_player_wyscout.get("cartons_jaunes", 0)
-dim_player_wyscout["general_cartons_rouges"] = dim_player_wyscout.get("cartons_rouges", 0)
-dim_player_wyscout["general_centres_precis"] = dim_player_wyscout.get("centres_precis", 0)
-dim_player_wyscout["general_centres_total"] = dim_player_wyscout.get("centres_total", 0)
-dim_player_wyscout["general_dribbles_reussis"] = dim_player_wyscout.get("dribbles_reussis", 0)
-dim_player_wyscout["general_dribbles_total"] = dim_player_wyscout.get("dribbles_total", 0)
-dim_player_wyscout["general_duels_aeriens_gagnes"] = dim_player_wyscout.get("duels_aeriens_gagnes", 0)
-dim_player_wyscout["general_duels_aeriens_total"] = dim_player_wyscout.get("duels_aeriens_total", 0)
-dim_player_wyscout["general_duels_perdus_total"] = dim_player_wyscout.get("duels_perdus_total", 0)
-dim_player_wyscout["general_interceptions_total"] = dim_player_wyscout.get("interceptions_total", 0)
-dim_player_wyscout["general_passes_decisives"] = dim_player_wyscout.get("passes_decisives", 0)
-dim_player_wyscout["general_passes_longues_precises"] = dim_player_wyscout.get("passes_longues_precises", 0)
-dim_player_wyscout["general_passes_longues_total"] = dim_player_wyscout.get("passes_longues_total", 0)
+dim_player_wyscout["general_cartons_jaunes"] = safe_get_column(dim_player_wyscout, "cartons_jaunes", 0)
+dim_player_wyscout["general_cartons_rouges"] = safe_get_column(dim_player_wyscout, "cartons_rouges", 0)
+dim_player_wyscout["general_centres_precis"] = safe_get_column(dim_player_wyscout, "centres_precis", 0)
+dim_player_wyscout["general_centres_total"] = safe_get_column(dim_player_wyscout, "centres_total", 0)
+dim_player_wyscout["general_dribbles_reussis"] = safe_get_column(dim_player_wyscout, "dribbles_reussis", 0)
+dim_player_wyscout["general_dribbles_total"] = safe_get_column(dim_player_wyscout, "dribbles_total", 0)
+dim_player_wyscout["general_duels_aeriens_gagnes"] = safe_get_column(dim_player_wyscout, "duels_aeriens_gagnes", 0)
+dim_player_wyscout["general_duels_aeriens_total"] = safe_get_column(dim_player_wyscout, "duels_aeriens_total", 0)
+dim_player_wyscout["general_duels_perdus_total"] = safe_get_column(dim_player_wyscout, "duels_perdus_total", 0)
+dim_player_wyscout["general_interceptions_total"] = safe_get_column(dim_player_wyscout, "interceptions_total", 0)
+dim_player_wyscout["general_passes_decisives"] = safe_get_column(dim_player_wyscout, "passes_decisives", 0)
+dim_player_wyscout["general_passes_longues_precises"] = safe_get_column(dim_player_wyscout, "passes_longues_precises", 0)
+dim_player_wyscout["general_passes_longues_total"] = safe_get_column(dim_player_wyscout, "passes_longues_total", 0)
 
 # Types des clés
 dim_player_wyscout["match_key"] = dim_player_wyscout["match_key"].astype(str)
@@ -149,9 +157,9 @@ else:
     dim_competition = pd.DataFrame(columns=["competition"])
 
 dim_competition["competition_key"] = dim_competition.index.astype(str)
-dim_competition["competition_name_std"] = dim_competition.get("competition", "0")
-dim_competition["competition_name_wyscout"] = dim_competition.get("competition", "0")
-dim_competition["competition_name_sportdb"] = dim_competition.get("competition", "0")
+dim_competition["competition_name_std"] = safe_get_column(dim_competition, "competition", "0")
+dim_competition["competition_name_wyscout"] = safe_get_column(dim_competition, "competition", "0")
+dim_competition["competition_name_sportdb"] = safe_get_column(dim_competition, "competition", "0")
 dim_competition["created_at"] = pd.to_datetime("now")
 dim_competition["competition_key"] = dim_competition["competition_key"].astype(str)
 
@@ -180,7 +188,7 @@ fact_match_wyscout["team_match_wyscout_key"] = fact_match_wyscout.index.astype(s
 fact_match_wyscout["match_key"] = fact_match_wyscout["match_id"].astype(str)
 
 # Liaisons vers les dimensions (pour l'instant avec des valeurs par défaut simples)
-fact_match_wyscout["score"] = fact_match_wyscout.get("score", "0-0")
+fact_match_wyscout["score"] = safe_get_column(fact_match_wyscout, "score", "0-0")
 fact_match_wyscout["competition_key"] = (
     dim_competition["competition_key"].iloc[0] if not dim_competition.empty else "0"
 )

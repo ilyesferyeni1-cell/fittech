@@ -106,7 +106,7 @@ export class AiRecommendationComponent implements OnInit {
   openSubstitutionDialog(player: any): void {
     const dialogRef = this.dialog.open(SubstitutionDialogComponent, {
       width: '400px',
-      data: { player, players: this.rankedPlayers }
+      data: { player, players: this.rankedPlayers, teams: this.teams }
     });
 
     dialogRef.afterClosed().subscribe(result => {

@@ -73,14 +73,23 @@ import { CommonModule } from '@angular/common';
 })
 export class SubstitutionDialogComponent {
   selectedPlayerId: string = '';
+  teams: any[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<SubstitutionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) { }
+  ) {
+    this.teams = data.teams || [];
+  }
 
   getTeamName(teamKey: string): string {
-    return this.data.players.find((p: any) => p.team_key === teamKey)?.team_name_std || 'Unknown';
+    if (this.teams.length > 0) {
+      const team = this.teams.find((t: any) => t.team_key === teamKey);
+      return team ? team.team_name_std : 'Unknown';
+    }
+    // Fallback: try to get from player data
+    const player = this.data.players.find((p: any) => p.team_key === teamKey);
+    return player?.team_name_std || 'Unknown';
   }
 
   onCancel(): void {
